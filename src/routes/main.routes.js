@@ -41,7 +41,7 @@ module.exports = function(app) {
     //BARANG
     app.post("/api/barang", [authJwt.verifyToken], barang.create_barang);
     app.put("/api/barang/:id", [authJwt.verifyToken], barang.update_barang);
-    app.get("/api/barang", [authJwt.verifyToken], barang.list_bank);
+    app.get("/api/barang", [authJwt.verifyToken], barang.list_barang);
     app.get("/api/barang/:id", [authJwt.verifyToken], barang.detail_barang);
     app.delete("/api/barang/:id", [authJwt.verifyToken], barang.delete_barang);
 
@@ -62,7 +62,7 @@ module.exports = function(app) {
 
     //PENGELUARAN
     app.post("/api/pengeluaran", [authJwt.verifyToken], pengeluaran.create_pengeluaran);
-    app.put("/api/pengeluaran/:id", [authJwt.verifyToken], pengeluaran.update_cpengeluaran);
+    app.put("/api/pengeluaran/:id", [authJwt.verifyToken], pengeluaran.update_pengeluaran);
     app.get("/api/pengeluaran", [authJwt.verifyToken], pengeluaran.list_pengeluaran);
     app.get("/api/pengeluaran/:id", [authJwt.verifyToken], pengeluaran.detail_pengeluaran);
     app.delete("/api/pengeluaran/:id", [authJwt.verifyToken], pengeluaran.delete_pengeluaran);

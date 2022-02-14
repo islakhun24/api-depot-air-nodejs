@@ -1,7 +1,7 @@
 const db =require('../models')
 const Bank = db.banks;
 
-exports.create_bank = (res, req)=>{
+exports.create_bank = (req, res)=>{
     const {
         nama_akun,
         nomor_rekening,
@@ -25,7 +25,7 @@ exports.create_bank = (res, req)=>{
     });
 }
 
-exports.update_bank = (res, req)=>{
+exports.update_bank = (req, res)=>{
     const {id} = req.params;
     const {
         nama_akun,
@@ -53,13 +53,14 @@ exports.update_bank = (res, req)=>{
     });
 }
 
-exports.list_bank = (res, req)=>{
+exports.list_bank = (req, res)=>{
     Bank.findAll().then((result) => {
         return res.status(200).send({
             message: 'Berhasil menampilkan list Bank',
             data: result
         });
     }).catch((err) => {
+        console.log(err);
         return res.status(500).send({
             message: 'Gagal menampilkan list Bank',
             data: null
@@ -67,13 +68,18 @@ exports.list_bank = (res, req)=>{
     });
 }
 
-exports.delete_bank = (res, req)=>{
+exports.delete_bank = (req, res)=>{
     const {id} = req.params
-    Bank.destroy(id).then((result) => {
+    Bank.destroy({
+        where: {
+            id: id
+        }
+    }).then((result) => {
         return res.status(200).send({
             message: 'Berhasil menghapus Bank'
         });
     }).catch((err) => {
+        console.log(err);
         return res.status(500).send({
             message: 'Gagal menghapus Bank',
             data: null
@@ -81,9 +87,9 @@ exports.delete_bank = (res, req)=>{
     });
 }
 
-exports.detail_bank = (res, req)=>{
+exports.detail_bank = (req, res)=>{
     const {id} = req.params
-    Bank.findById(id).then((result) => {
+    Bank.findByPk(id).then((result) => {
         return res.status(200).send({
             message: 'Berhasil menampilkan Bank',
             data: result

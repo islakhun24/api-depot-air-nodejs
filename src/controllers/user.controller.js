@@ -1,5 +1,6 @@
 const db = require('../models');
 const User = db.user;
+const md5 = require('md5');
 
 exports.change_password = (req, res)=>{
     const userId = req.userId;
@@ -16,11 +17,11 @@ exports.change_password = (req, res)=>{
 
     User.update(
         {
-            password: bcrypt.hashSync(req.body.password, 8)
+            password: md5(password1)
         }, 
         {
+            returning: true,
             where: {
-                returning: true,
                 id: userId
             }
         }
@@ -29,6 +30,7 @@ exports.change_password = (req, res)=>{
             message: 'Berhasil Ganti Password'
         });
     }).catch((err) => {
+        console.log(err);
         return res.status(500).send({
             message: 'Gagal Ganti Password'
         });
@@ -52,11 +54,11 @@ exports.change_username_and_password = (req, res)=>{
     User.update(
         {
             username: username,
-            password: bcrypt.hashSync(req.body.password, 8)
+            password: md5(password1)
         }, 
         {
+            returning: true,
             where: {
-                returning: true,
                 id: userId
             }
         }
@@ -108,7 +110,7 @@ exports.update_profile = (req, res)=>{
 
 exports.profile = (req, res)=>{
     const userId = req.userId;
-    User.findById(userId).then((result) => {
+    User.findByPk(userId).then((result) => {
         return res.status(200).send({
             message: 'Berhasil Menampilkan data profil',
             data: result
