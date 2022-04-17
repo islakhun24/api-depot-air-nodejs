@@ -1,6 +1,20 @@
 const db =require('../models')
 const Customer = db.customer;
-
+const Op = db.op;
+const getPagination = (page, size) => {
+    const limit = size ? +size : 15;
+    const offset = page ? page * limit : 0;
+  
+    return { limit, offset };
+  };
+  
+  const getPagingData = (data, page, limit) => {
+    const { count: totalItems, rows: customer } = data;
+    const currentPage = page ? +page : 0;
+    const totalPages = Math.ceil(totalItems / limit);
+  
+    return { totalItems, customer, totalPages, currentPage };
+  };
 exports.create_customer = (req, res)=>{
     const {
         nama_customer,
@@ -51,11 +65,13 @@ exports.update_customer = (req, res)=>{
 }
 
 exports.list_customer = (req, res)=>{
-    Customer.findAll().then((result) => {
-        return res.status(200).send({
-            message: 'Berhasil menampilkan list Customer',
-            data: result
-        });
+    const { page=0, size=15, nama_customer } = req.query;
+    var condition = nama_customer ? { nama_customer: { [Op.like]: `%${nama_customer}%` } } : null;
+
+    const { limit, offset } = getPagination(page, size);
+    Customer.findAndCountAll({ where: condition, limit, offset }).then((result) => {
+        const response = getPagingData(result, page, limit);
+        return res.status(200).send(response);
     }).catch((err) => {
         console.log(err);
         return res.status(500).send({

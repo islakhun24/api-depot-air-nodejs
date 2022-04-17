@@ -1,19 +1,37 @@
 const db =require('../models')
 const Pengeluaran = db.pengeluaran;
 var moment = require('moment');
+const Op = db.op;
+const getPagination = (page, size) => {
+    const limit = size ? +size : 15;
+    const offset = page ? page * limit : 0;
+  
+    return { limit, offset };
+  };
+  
+  const getPagingData = (data, page, limit) => {
+    const { count: totalItems, rows: pengeluaran } = data;
+    const currentPage = page ? +page : 0;
+    const totalPages = Math.ceil(totalItems / limit);
+  
+    return { totalItems, pengeluaran, totalPages, currentPage };
+  };
 exports.create_pengeluaran = (req, res)=>{
     const {
         nama_pengeluaran, satuan, jumlah, harga, keterangan, date,
 
    } = req.body;
-
+   let dates = new Date(date)
+   const tanggal = dates.toISOString().split('T')[0]
+   console.log(tanggal);
    Pengeluaran.create({
-        nama_pengeluaran, satuan, jumlah, harga, keterangan, date,
+        nama_pengeluaran, satuan, jumlah, harga, keterangan, date: tanggal,
     }).then((result) => {
         return res.status(200).send({
             message: 'Berhasil Tambah Pengeluaran'
         });
     }).catch((err) => {
+        console.log(err)
         return res.status(500).send({
             message: 'Gagal Tambah Pengeluaran'
         })
@@ -43,21 +61,15 @@ exports.update_pengeluaran = (req, res)=>{
 }
 
 exports.list_pengeluaran = (req, res)=>{
-    Pengeluaran.findAll().then((result) => {
-        return res.status(200).send({
-            message: 'Berhasil menampilkan list Pengeluaran',
-            data: result.map(val=>{
-                return {
-                    id: val.id,
-                    nama_pengeluaran: val.nama_pengeluaran,
-                    satuan: val.satuan,
-                    jumlah: val.jumlah,
-                    harga: val.harga,
-                    keterangan: val.keterangan,
-                    date: moment(val.date).format('DD-MM-YYYY'),
-                }
-            })
-        });
+    
+    const { page=0, size=15, nama_pengeluaran } = req.query;
+    var condition = nama_pengeluaran ? { nama_pengeluaran: { [Op.like]: `%${nama_pengeluaran}%` } } : null;
+
+    const { limit, offset } = getPagination(page, size);
+    Pengeluaran.findAndCountAll({ where: condition, limit, offset }).then((result) => {
+        console.log('result', result);
+        const response = getPagingData(result, page, limit);
+        return res.status(200).send(response);
     }).catch((err) => {
         console.log(err);
         return res.status(500).send({
@@ -65,6 +77,7 @@ exports.list_pengeluaran = (req, res)=>{
             data: null
         });
     });
+
 }
 
 exports.delete_pengeluaran = (req, res)=>{

@@ -1,6 +1,20 @@
 const db =require('../models')
 const Ewallet = db.ewallet;
-
+const Op = db.op;
+const getPagination = (page, size) => {
+    const limit = size ? +size : 15;
+    const offset = page ? page * limit : 0;
+  
+    return { limit, offset };
+  };
+  
+  const getPagingData = (data, page, limit) => {
+    const { count: totalItems, rows: wallet } = data;
+    const currentPage = page ? +page : 0;
+    const totalPages = Math.ceil(totalItems / limit);
+  
+    return { totalItems, wallet, totalPages, currentPage };
+  };
 exports.create_ewallet = (req, res)=>{
     const {
         nama_wallet, nomor_hp, qr_code
@@ -43,15 +57,17 @@ exports.update_ewallet = (req, res)=>{
 }
 
 exports.list_ewallet = (req, res)=>{
-    Ewallet.findAll().then((result) => {
-        return res.status(200).send({
-            message: 'Berhasil menampilkan list Ewallet',
-            data: result
-        });
+    const { page=0, size=15, nama_wallet } = req.query;
+    var condition = nama_wallet ? { nama_wallet: { [Op.like]: `%${nama_wallet}%` } } : null;
+
+    const { limit, offset } = getPagination(page, size);
+    Ewallet.findAndCountAll({ where: condition, limit, offset }).then((result) => {
+        const response = getPagingData(result, page, limit);
+        return res.status(200).send(response);
     }).catch((err) => {
         console.log(err);
         return res.status(500).send({
-            message: 'Gagal menampilkan list Ewallet',
+            message: 'Gagal menampilkan list wallet',
             data: null
         });
     });
