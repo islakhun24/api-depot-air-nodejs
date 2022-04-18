@@ -1,7 +1,7 @@
 const db = require('../models');
 const User = db.user;
 const md5 = require('md5');
-
+const fs = require('fs');
 exports.change_password = (req, res)=>{
     const userId = req.userId;
     const {
@@ -76,19 +76,18 @@ exports.change_username_and_password = (req, res)=>{
 
 exports.update_profile = (req, res)=>{
     const userId = req.userId;
+    console.log('userId', userId);
     const {
         nama_perusahaan,
         alamat_perusahaan,
-        nohp_perusahaan,
-        logo_perusahaan
+        nohp_perusahaan
     } = req.body;
 
     User.update(
         {
             nama_perusahaan: nama_perusahaan,
             alamat_perusahaan: alamat_perusahaan,
-            nohp_perusahaan: nohp_perusahaan,
-            logo_perusahaan: logo_perusahaan
+            nohp_perusahaan: nohp_perusahaan
         }, 
         {
             returning: true,
@@ -97,6 +96,7 @@ exports.update_profile = (req, res)=>{
             }
         }
     ).then((result) => {
+        console.log('userId', result);
         return res.status(200).send({
             message: 'Berhasil Ganti Profile'
         });
@@ -110,6 +110,7 @@ exports.update_profile = (req, res)=>{
 
 exports.profile = (req, res)=>{
     const userId = req.userId;
+    console.log('userId', userId);
     User.findByPk(userId).then((result) => {
         return res.status(200).send({
             message: 'Berhasil Menampilkan data profil',
@@ -123,3 +124,53 @@ exports.profile = (req, res)=>{
     });
 
 }
+
+exports.change_photo = async (req, res) => {
+    const url = req.protocol + '://' + req.get('host')
+    const {userId} = req
+    if (!req.file) {
+        return res.send("No file upload");
+    } else {
+        User.update(
+            {
+                logo_perusahaan: url + '/public/' + req.file.filename
+            }, 
+            {
+                returning: true,
+                where: {
+                    id: userId
+                }
+            }
+        ).then((result) => {
+            console.log('userId', result);
+            return res.status(200).send({
+                message: 'Berhasil Ganti Profile'
+            });
+        }).catch((err) => {
+            return res.status(500).send({
+                message: 'Gagal Ganti Profile'
+            });
+        });
+    }
+  };
+
+  exports.get_photo = async (req, res) => {
+    const {id} = req.params
+    
+    User.findByPk(id).then((result) => {
+        console.log(result);
+        fs.readFile(result.logo_perusahaan, function(err, data) {
+            if (err) throw err; // Fail if the file can't be read.
+            else {
+              res.writeHead(200, {'Content-Type': 'image/jpeg'});
+              res.end(data); // Send the file data to the browser.
+            }
+          });
+    }).catch((err) => {
+        console.log(err);
+        return res.status(500).send({
+            message: 'Gagal Menampilkan data profil',
+            data: null
+        });
+    });
+  }

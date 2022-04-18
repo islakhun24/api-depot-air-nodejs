@@ -6,6 +6,30 @@ const barang = require("../controllers/barang.controller");
 const customer = require("../controllers/customer.controller");
 const ewallet = require("../controllers/ewallet.controller");
 const pengeluaran = require("../controllers/pengeluaran.controller");
+var multer = require("multer");
+const { uuid } = require('uuidv4');
+
+const DIR = './public/';
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, DIR);
+    },
+    filename: (req, file, cb) => {
+        const fileName = file.originalname.toLowerCase().split(' ').join('-');
+        cb(null, uuid() + '-' + fileName)
+    }
+});
+var upload = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
+            cb(null, true);
+        } else {
+            cb(null, false);
+            return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
+        }
+    }
+});
 
 module.exports = function(app) {
     app.use(function(req, res, next) {
@@ -15,6 +39,7 @@ module.exports = function(app) {
       );
       next();
     });
+
     //Ganti Password
     app.post("/api/user/change-password",[authJwt.verifyToken],user.change_password
     );
@@ -30,7 +55,9 @@ module.exports = function(app) {
     //Lihat Profil
     app.get("/api/user/profile",[authJwt.verifyToken],user.profile
     );
-    
+    app.post('/api/user/change-photo', [upload.single('profileImg'), authJwt.verifyToken], user.change_photo);
+
+    app.get('/api/user/get-photo/:id', user.get_photo);
     //BANk
     app.post("/api/bank", [authJwt.verifyToken], bank.create_bank);
     app.put("/api/bank/:id", [authJwt.verifyToken], bank.update_bank);

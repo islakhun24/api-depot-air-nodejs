@@ -1,9 +1,13 @@
 const express = require("express");
 const db = require("./src/models");
 db.sequelize.sync();
-
+var path = require('path');
 const cors = require("cors");
 const app = express();
+
+app.use(express.static(__dirname + 'public')); //Serves resources from public folder
+
+app.use('/public', express.static(__dirname + '/public'));
 
 db.sequelize.sync().then(() => {
     console.log("Drop and re-sync db.");
