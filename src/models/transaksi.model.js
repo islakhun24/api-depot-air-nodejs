@@ -11,7 +11,7 @@ module.exports = (sequelize, Sequelize) => {
         values: ['cash', 'e_wallet', 'bank_transfer', 'virtual_account']
       },
       date: {
-        type: Sequelize.STRING
+        type: Sequelize.DATE
       },
       bank_id: {
         type: Sequelize.STRING
@@ -25,13 +25,15 @@ module.exports = (sequelize, Sequelize) => {
       total_harga: {
         type: Sequelize.STRING
       },
+      jumlah_uang: {
+        type: Sequelize.STRING
+      },
       metode_pengiriman: {
         type: Sequelize.ENUM,
-        values: ['diantar', 'tidak']
+        values: ['di_antar', 'ambil_sendiri']
       },
       biaya_pengantaran: {
-        type: Sequelize.ENUM,
-        values: ['diantar', 'tidak']
+        type: Sequelize.STRING
       },
       keterangan: {
         type: Sequelize.STRING

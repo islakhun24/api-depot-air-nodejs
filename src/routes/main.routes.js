@@ -5,6 +5,7 @@ const bank = require("../controllers/banks.controller");
 const barang = require("../controllers/barang.controller");
 const customer = require("../controllers/customer.controller");
 const ewallet = require("../controllers/ewallet.controller");
+const transaksi = require("../controllers/transaksi.controller");
 const pengeluaran = require("../controllers/pengeluaran.controller");
 var multer = require("multer");
 const { uuid } = require('uuidv4');
@@ -98,6 +99,11 @@ module.exports = function(app) {
     //CRUD Barang -> Barang TERJUAL
     //CRUD CUSTOMER -> JUMLAH CUSTOMER MEMBELI
     //TAMBAH TRANSAKSI
+    app.get("/api/transaksi/get_customer", [authJwt.verifyToken], transaksi.get_customer);
+    app.get("/api/transaksi/get_barang", [authJwt.verifyToken], transaksi.get_barang);
+    app.get("/api/transaksi/get_wallet", [authJwt.verifyToken], transaksi.ewallets);
+    app.get("/api/transaksi/get_bank", [authJwt.verifyToken], transaksi.get_banks);
+    app.post("/api/transaksi/post", [authJwt.verifyToken], transaksi.post_transaksi);
     //PELAPORAN TRANSAKSI -> PENGHASILAN PERBULAN, PERMINGGU, HARI INI, TAHUN, RANGE TANGGAL
     //PENGELUARAN BULANAN -> LISTRIK
     //KEUNTUNGAN
