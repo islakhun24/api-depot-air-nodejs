@@ -25,9 +25,6 @@ module.exports = (sequelize, Sequelize) => {
       total_harga: {
         type: Sequelize.STRING
       },
-      jumlah_uang: {
-        type: Sequelize.STRING
-      },
       metode_pengiriman: {
         type: Sequelize.ENUM,
         values: ['di_antar', 'ambil_sendiri']
@@ -35,8 +32,15 @@ module.exports = (sequelize, Sequelize) => {
       biaya_pengantaran: {
         type: Sequelize.STRING
       },
+      total_biaya: {
+        type: Sequelize.STRING
+      },
       keterangan: {
         type: Sequelize.STRING
+      },
+      status: {
+        type: Sequelize.ENUM,
+        values: ['belum_bayar', 'lunas']
       },
     });
     return User;

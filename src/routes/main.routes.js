@@ -7,6 +7,7 @@ const customer = require("../controllers/customer.controller");
 const ewallet = require("../controllers/ewallet.controller");
 const transaksi = require("../controllers/transaksi.controller");
 const pengeluaran = require("../controllers/pengeluaran.controller");
+const dashboard = require("../controllers/dashboard.controller");
 var multer = require("multer");
 const { uuid } = require('uuidv4');
 
@@ -95,16 +96,23 @@ module.exports = function(app) {
     app.get("/api/pengeluaran/:id", [authJwt.verifyToken], pengeluaran.detail_pengeluaran);
     app.delete("/api/pengeluaran/:id", [authJwt.verifyToken], pengeluaran.delete_pengeluaran);
 
-
-    //CRUD Barang -> Barang TERJUAL
-    //CRUD CUSTOMER -> JUMLAH CUSTOMER MEMBELI
-    //TAMBAH TRANSAKSI
+    //TRANSAKSI
     app.get("/api/transaksi/get_customer", [authJwt.verifyToken], transaksi.get_customer);
     app.get("/api/transaksi/get_barang", [authJwt.verifyToken], transaksi.get_barang);
     app.get("/api/transaksi/get_wallet", [authJwt.verifyToken], transaksi.ewallets);
     app.get("/api/transaksi/get_bank", [authJwt.verifyToken], transaksi.get_banks);
     app.post("/api/transaksi/post", [authJwt.verifyToken], transaksi.post_transaksi);
-    //PELAPORAN TRANSAKSI -> PENGHASILAN PERBULAN, PERMINGGU, HARI INI, TAHUN, RANGE TANGGAL
-    //PENGELUARAN BULANAN -> LISTRIK
+    app.get("/api/transaksi/detail/:id", [authJwt.verifyToken], transaksi.detail_transaksi);
+    app.get("/api/transaksi/get", [authJwt.verifyToken], transaksi.get_transaksi);
+    app.put("/api/transaksi/update_status/:id", [authJwt.verifyToken], transaksi.change_status);
+    app.delete("/api/transaksi/delete/:id", [authJwt.verifyToken], transaksi.delete);
+    app.put("/api/transaksi/update/:id", [authJwt.verifyToken], transaksi.update);
+    
     //KEUNTUNGAN
+
+    //DAHSBOARD
+    app.get("/api/dashboard/total_pengeluaran", [authJwt.verifyToken], dashboard.total_pengeluaran);
+    app.get("/api/dashboard/total_pemasukan", [authJwt.verifyToken], dashboard.total_pemasukan);
+    app.get("/api/dashboard/total_transaksi", [authJwt.verifyToken], dashboard.total_transaksi);
+    app.get("/api/dashboard/chart", [authJwt.verifyToken], dashboard.chart_transaksi);
   };
