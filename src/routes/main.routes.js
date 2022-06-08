@@ -92,9 +92,11 @@ module.exports = function(app) {
     //PENGELUARAN
     app.post("/api/pengeluaran", [authJwt.verifyToken], pengeluaran.create_pengeluaran);
     app.put("/api/pengeluaran/:id", [authJwt.verifyToken], pengeluaran.update_pengeluaran);
-    app.get("/api/pengeluaran", [authJwt.verifyToken], pengeluaran.list_pengeluaran);
+    app.post("/api/pengeluaran/list", [authJwt.verifyToken], pengeluaran.list_pengeluaran);
     app.get("/api/pengeluaran/:id", [authJwt.verifyToken], pengeluaran.detail_pengeluaran);
     app.delete("/api/pengeluaran/:id", [authJwt.verifyToken], pengeluaran.delete_pengeluaran);
+    app.post("/api/pengeluaran/download", [authJwt.verifyToken], pengeluaran.download);
+    app.post("/api/transaksi/download", [authJwt.verifyToken], transaksi.download);
 
     //TRANSAKSI
     app.get("/api/transaksi/get_customer", [authJwt.verifyToken], transaksi.get_customer);
@@ -103,7 +105,7 @@ module.exports = function(app) {
     app.get("/api/transaksi/get_bank", [authJwt.verifyToken], transaksi.get_banks);
     app.post("/api/transaksi/post", [authJwt.verifyToken], transaksi.post_transaksi);
     app.get("/api/transaksi/detail/:id", [authJwt.verifyToken], transaksi.detail_transaksi);
-    app.get("/api/transaksi/get", [authJwt.verifyToken], transaksi.get_transaksi);
+    app.post("/api/transaksi/list", [authJwt.verifyToken], transaksi.get_transaksi);
     app.put("/api/transaksi/update_status/:id", [authJwt.verifyToken], transaksi.change_status);
     app.delete("/api/transaksi/delete/:id", [authJwt.verifyToken], transaksi.delete);
     app.put("/api/transaksi/update/:id", [authJwt.verifyToken], transaksi.update);

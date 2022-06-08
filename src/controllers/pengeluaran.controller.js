@@ -1,6 +1,8 @@
 const db =require('../models')
 const Pengeluaran = db.pengeluaran;
 var moment = require('moment');
+
+const excel = require("exceljs");
 const Op = db.op;
 const getPagination = (page, size) => {
     const limit = size ? +size : 15;
@@ -62,11 +64,17 @@ exports.update_pengeluaran = (req, res)=>{
 
 exports.list_pengeluaran = (req, res)=>{
     
-    const { page=0, size=15, nama_pengeluaran } = req.query;
+    const { page=0, size=15, nama_pengeluaran, toDate, fromDate } = req.body;
     var condition = nama_pengeluaran ? { nama_pengeluaran: { [Op.like]: `%${nama_pengeluaran}%` } } : null;
 
+    var conditionDate = fromDate && toDate ? {date : {
+        [Op.between]: [fromDate, toDate]
+    }}:null
+
     const { limit, offset } = getPagination(page, size);
-    Pengeluaran.findAndCountAll({ where: condition, limit, offset }).then((result) => {
+    Pengeluaran.findAndCountAll({ where: {
+        [Op.and]:[condition, conditionDate]
+    }, limit, offset }).then((result) => {
         console.log('result', result);
         const response = getPagingData(result, page, limit);
         return res.status(200).send(response);
@@ -113,3 +121,87 @@ exports.detail_pengeluaran = (req, res)=>{
         });
     });
 }
+
+exports.download = (req, res) => {
+    const { toDate, fromDate } = req.body;
+    var conditionDate = fromDate && toDate ? {date : {
+        [Op.between]: [fromDate, toDate]
+    }}:null
+    Pengeluaran.findAll({
+        where: conditionDate
+    }).then((objs) => {
+      let pengeluaran = [];
+      objs.forEach((obj) => {
+        pengeluaran.push({
+            date: obj.date,
+            nama_pengeluaran: obj.nama_pengeluaran,
+            satuan: obj.satuan,
+            jumlah: obj.jumlah,
+            harga: parseInt(obj.harga),
+            keterangan: obj.keterangan
+        });
+      });
+      let workbook = new excel.Workbook();
+      let worksheet = workbook.addWorksheet("Pengeluaran");
+      worksheet.getCell('A1').font = { bold: true };
+      worksheet.getCell('B1').font = { bold: true };
+      worksheet.getCell('C1').font = { bold: true };
+      worksheet.getCell('D1').font = { bold: true };
+      worksheet.getCell('E1').font = { bold: true };
+      worksheet.getCell('F1').font = { bold: true };
+      worksheet.getCell('E1').fill = { 
+            type: 'pattern',
+            pattern:'solid',
+			fgColor:{ argb:'cccccc' }
+        };
+        worksheet.getCell('F1').fill = { 
+            type: 'pattern',
+            pattern:'solid',
+			fgColor:{ argb:'cccccc' }
+        };
+        worksheet.getCell('D1').fill = { 
+            type: 'pattern',
+            pattern:'solid',
+			fgColor:{ argb:'cccccc' }
+        };
+        worksheet.getCell('C1').fill = { 
+            type: 'pattern',
+            pattern:'solid',
+			fgColor:{ argb:'cccccc' }
+        };
+        worksheet.getCell('B1').fill = { 
+            type: 'pattern',
+            pattern:'solid',
+			fgColor:{ argb:'cccccc' }
+        }; 
+        worksheet.getCell('A1').fill = { 
+            type: 'pattern',
+            pattern:'solid',
+			fgColor:{ argb:'cccccc' }
+        };
+        worksheet.getRow(1).height = 20;
+        worksheet.getRow(1).alignment = { vertical: 'middle', horizontal: 'center' };
+        worksheet.getColumn('E').numFmt = '#,##0';
+      worksheet.columns = [
+        { header: "Tanggal", key: "date", width: 20 },
+        { header: "Nama Pengeluaran", key: "nama_pengeluaran", width: 50 },
+        { header: "Satuan", key: "satuan", width: 10 },
+        { header: "Jumlah", key: "jumlah", width: 10 },
+        { header: "Harga", key: "harga", width: 20 },
+        { header: "Keterangan", key: "keterangan", width: 100 },
+      ];
+      // Add Array Rows
+      worksheet.addRows(pengeluaran);
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      );
+      res.setHeader(
+        "Content-Disposition",
+        "attachment; filename=" + "pengeluaran.xlsx"
+      );
+      return workbook.xlsx.write(res).then(function () {
+        res.status(200).end();
+      });
+    });
+  };
