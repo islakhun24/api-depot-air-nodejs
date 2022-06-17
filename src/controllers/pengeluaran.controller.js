@@ -142,53 +142,64 @@ exports.download = (req, res) => {
         });
       });
       let workbook = new excel.Workbook();
-      let worksheet = workbook.addWorksheet("Pengeluaran");
-      worksheet.getCell('A1').font = { bold: true };
-      worksheet.getCell('B1').font = { bold: true };
-      worksheet.getCell('C1').font = { bold: true };
-      worksheet.getCell('D1').font = { bold: true };
-      worksheet.getCell('E1').font = { bold: true };
-      worksheet.getCell('F1').font = { bold: true };
-      worksheet.getCell('E1').fill = { 
+      let worksheet = workbook.addWorksheet("Depot Air Minum Mekarsari");
+      worksheet.getCell(`A1`).value = "Pengeluaran Depot Air Minum Mekarsari";
+      worksheet.getCell(`A1`).alignment = {} // Assign title to cell A1 -- THIS IS WHAT YOU'RE LOOKING FOR.
+            worksheet.mergeCells('A1:F1'); // Extend cell over all column headers
+            worksheet.getRow(1).alignment = { vertical: 'middle', horizontal: 'left' }     
+     worksheet.getCell('A1').font = { bold: true, size: 18 }; 
+      worksheet.getCell('A3').font = { bold: true };
+      worksheet.getCell('B3').font = { bold: true };
+      worksheet.getCell('C3').font = { bold: true };
+      worksheet.getCell('D3').font = { bold: true };
+      worksheet.getCell('E3').font = { bold: true };
+      worksheet.getCell('F3').font = { bold: true };
+      worksheet.getCell('E3').fill = { 
             type: 'pattern',
             pattern:'solid',
 			fgColor:{ argb:'cccccc' }
         };
-        worksheet.getCell('F1').fill = { 
+        worksheet.getCell('F3').fill = { 
             type: 'pattern',
             pattern:'solid',
 			fgColor:{ argb:'cccccc' }
         };
-        worksheet.getCell('D1').fill = { 
+        worksheet.getCell('D3').fill = { 
             type: 'pattern',
             pattern:'solid',
 			fgColor:{ argb:'cccccc' }
         };
-        worksheet.getCell('C1').fill = { 
+        worksheet.getCell('C3').fill = { 
             type: 'pattern',
             pattern:'solid',
 			fgColor:{ argb:'cccccc' }
         };
-        worksheet.getCell('B1').fill = { 
+        worksheet.getCell('B3').fill = { 
             type: 'pattern',
             pattern:'solid',
 			fgColor:{ argb:'cccccc' }
         }; 
-        worksheet.getCell('A1').fill = { 
+        worksheet.getCell('A3').fill = { 
             type: 'pattern',
             pattern:'solid',
 			fgColor:{ argb:'cccccc' }
         };
         worksheet.getRow(1).height = 20;
-        worksheet.getRow(1).alignment = { vertical: 'middle', horizontal: 'center' };
+        worksheet.getRow(1).alignment = { vertical: 'middle', horizontal: 'left' };
         worksheet.getColumn('E').numFmt = '#,##0';
+        worksheet.getCell('A3').value = "Tanggal";
+        worksheet.getCell('B3').value = "Nama Pengeluaran";
+        worksheet.getCell('C3').value = "Satuan";
+        worksheet.getCell('D3').value = "Jumlah";
+        worksheet.getCell('E3').value = "Harga";
+        worksheet.getCell('F3').value = "Keterangan";
       worksheet.columns = [
-        { header: "Tanggal", key: "date", width: 20 },
-        { header: "Nama Pengeluaran", key: "nama_pengeluaran", width: 50 },
-        { header: "Satuan", key: "satuan", width: 10 },
-        { header: "Jumlah", key: "jumlah", width: 10 },
-        { header: "Harga", key: "harga", width: 20 },
-        { header: "Keterangan", key: "keterangan", width: 100 },
+        {  key: "date", width: 20 },
+        { key: "nama_pengeluaran", width: 50 },
+        {  key: "satuan", width: 10 },
+        {  key: "jumlah", width: 10 },
+        {  key: "harga", width: 20 },
+        {  key: "keterangan", width: 100 },
       ];
       // Add Array Rows
       worksheet.addRows(pengeluaran);

@@ -464,109 +464,128 @@ exports.download = (req, res) => {
                     transaksi.push(object);
                 });
             let workbook = new excel.Workbook();
-            let worksheet = workbook.addWorksheet("Pengeluaran");
-            worksheet.getCell('A1').font = { bold: true };
-            worksheet.getCell('B1').font = { bold: true };
-            worksheet.getCell('C1').font = { bold: true };
-            worksheet.getCell('D1').font = { bold: true };
-            worksheet.getCell('E1').font = { bold: true };
-            worksheet.getCell('F1').font = { bold: true };
-            worksheet.getCell('G1').font = { bold: true };
-            worksheet.getCell('H1').font = { bold: true };
-            worksheet.getCell('I1').font = { bold: true };
-            worksheet.getCell('J1').font = { bold: true };
-            worksheet.getCell('K1').font = { bold: true };
-            worksheet.getCell('L1').font = { bold: true };
-            worksheet.getCell('M1').font = { bold: true };
-            worksheet.getCell('N1').font = { bold: true };
-            worksheet.getCell('E1').fill = { 
+            let worksheet = workbook.addWorksheet("Transaksi Depot Air Minum Mekarsari");
+            worksheet.getCell(`A1`).value = "Transaksi Depot Air Minum Mekarsari"; // Assign title to cell A1 -- THIS IS WHAT YOU'RE LOOKING FOR.
+            worksheet.mergeCells('A1:N1'); // Extend cell over all column headers
+            worksheet.getRow(1).alignment = { vertical: 'middle', horizontal: 'left' }
+            worksheet.getCell('A1').font = { bold: true, size: 18 }; // Set font size to 18pt
+
+            worksheet.getCell('A3').font = { bold: true };
+            worksheet.getCell('B3').font = { bold: true };
+            worksheet.getCell('C3').font = { bold: true };
+            worksheet.getCell('D3').font = { bold: true };
+            worksheet.getCell('E3').font = { bold: true };
+            worksheet.getCell('F3').font = { bold: true };
+            worksheet.getCell('G3').font = { bold: true };
+            worksheet.getCell('H3').font = { bold: true };
+            worksheet.getCell('I3').font = { bold: true };
+            worksheet.getCell('J3').font = { bold: true };
+            worksheet.getCell('K3').font = { bold: true };
+            worksheet.getCell('L3').font = { bold: true };
+            worksheet.getCell('M3').font = { bold: true };
+            worksheet.getCell('N3').font = { bold: true };
+            worksheet.getCell('E3').fill = { 
                     type: 'pattern',
                     pattern:'solid',
                     fgColor:{ argb:'cccccc' }
                 };
-            worksheet.getCell('F1').fill = { 
+            worksheet.getCell('F3').fill = { 
                 type: 'pattern',
                 pattern:'solid',
                 fgColor:{ argb:'cccccc' }
             };
-            worksheet.getCell('D1').fill = { 
+            worksheet.getCell('D3').fill = { 
                 type: 'pattern',
                 pattern:'solid',
                 fgColor:{ argb:'cccccc' }
             };
-            worksheet.getCell('C1').fill = { 
+            worksheet.getCell('C3').fill = { 
                 type: 'pattern',
                 pattern:'solid',
                 fgColor:{ argb:'cccccc' }
             };
-            worksheet.getCell('B1').fill = { 
+            worksheet.getCell('B3').fill = { 
                 type: 'pattern',
                 pattern:'solid',
                 fgColor:{ argb:'cccccc' }
             }; 
-            worksheet.getCell('A1').fill = { 
+            worksheet.getCell('A3').fill = { 
                 type: 'pattern',
                 pattern:'solid',
                 fgColor:{ argb:'cccccc' }
             };
-            worksheet.getCell('G1').fill = { 
+            worksheet.getCell('G3').fill = { 
                 type: 'pattern',
                 pattern:'solid',
                 fgColor:{ argb:'cccccc' }
             };
-            worksheet.getCell('H1').fill = { 
+            worksheet.getCell('H3').fill = { 
                 type: 'pattern',
                 pattern:'solid',
                 fgColor:{ argb:'cccccc' }
             };
-            worksheet.getCell('I1').fill = { 
+            worksheet.getCell('I3').fill = { 
                 type: 'pattern',
                 pattern:'solid',
                 fgColor:{ argb:'cccccc' }
             };
-            worksheet.getCell('J1').fill = { 
+            worksheet.getCell('J3').fill = { 
                 type: 'pattern',
                 pattern:'solid',
                 fgColor:{ argb:'cccccc' }
             };
-            worksheet.getCell('K1').fill = { 
+            worksheet.getCell('K3').fill = { 
                 type: 'pattern',
                 pattern:'solid',
                 fgColor:{ argb:'cccccc' }
             }; 
-            worksheet.getCell('L1').fill = { 
+            worksheet.getCell('L3').fill = { 
                 type: 'pattern',
                 pattern:'solid',
                 fgColor:{ argb:'cccccc' }
             };
-            worksheet.getCell('M1').fill = { 
+            worksheet.getCell('M3').fill = { 
                 type: 'pattern',
                 pattern:'solid',
                 fgColor:{ argb:'cccccc' }
             };
-            worksheet.getCell('N1').fill = { 
+            worksheet.getCell('N3').fill = { 
                 type: 'pattern',
                 pattern:'solid',
                 fgColor:{ argb:'cccccc' }
             }; 
-                worksheet.getRow(1).height = 20;
-                worksheet.getRow(1).alignment = { vertical: 'middle', horizontal: 'center' };
+                worksheet.getRow(3).height = 20;
+                worksheet.getRow(3).alignment = { vertical: 'middle', horizontal: 'center' };
+            worksheet.getCell('A3').value ="Tanggal";
+            worksheet.getCell('B3').value ="Nama Customer";
+            worksheet.getCell('C3').value ="No Hp";
+            worksheet.getCell('D3').value ="Alamat";
+            worksheet.getCell('E3').value ="Nama Barang";
+            worksheet.getCell('F3').value ="Satuan";
+            worksheet.getCell('G3').value ="Harga Barang";
+            worksheet.getCell('H3').value ="Pembayaran";
+            worksheet.getCell('I3').value ="Nama Akun";
+            worksheet.getCell('J3').value ="Pemilik";
+            worksheet.getCell('K3').value ="Nomor Akun";
+            worksheet.getCell('L3').value ="Pengiriman";
+            worksheet.getCell('M3').value ="Biaya Pengantaran";
+            worksheet.getCell('N3').value ="Keterangan";
             worksheet.columns = [
-                { header: "Tanggal", key: "date", width: 20 },
-                { header: "Nama Customer", key: "nama_customer", width: 20 },
-                { header: "No Hp", key: "nohp_customer", width: 20 },
-                { header: "Alamat", key: "alamat_customer", width: 30 },
-                { header: "Nama Barang", key: "nama_barang", width: 20 },
-                { header: "Satuan", key: "satuan", width: 10 },
-                { header: "Harga Barang", key: "harga_barang", width: 20 },
-                { header: "Pembayaran", key: "payment_methods", width: 20 },
-                { header: "Nama Akun", key: "nama_akun", width: 20 },
-                { header: "Pemilik", key: "pemilik_akun", width: 20 },
-                { header: "Nomor Akun", key: "nomor_akun", width: 20 },
-                { header: "Pengiriman", key: "metode_pengiriman", width: 20 },
-                { header: "Biaya Pengantaran", key: "biaya_pengantaran", width: 20 },
+                {  key: "date", width: 20 },
+                {  key: "nama_customer", width: 20 },
+                {  key: "nohp_customer", width: 20 },
+                {  key: "alamat_customer", width: 30 },
+                {  key: "nama_barang", width: 20 },
+                {  key: "satuan", width: 10 },
+                {  key: "harga_barang", width: 20 },
+                {  key: "payment_methods", width: 20 },
+                {  key: "nama_akun", width: 20 },
+                {  key: "pemilik_akun", width: 20 },
+                {  key: "nomor_akun", width: 20 },
+                {  key: "metode_pengiriman", width: 20 },
+                {  key: "biaya_pengantaran", width: 20 },
 
-                { header: "Keterangan", key: "keterangan", width: 50 },
+                {  key: "keterangan", width: 50 },
             ];
             // // Add Array Rows
             worksheet.addRows(transaksi);
